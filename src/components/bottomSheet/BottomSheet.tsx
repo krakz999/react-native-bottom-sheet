@@ -170,7 +170,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     const currentIndexRef = useRef<number>(
       animateOnMount ? -1 : _providedIndex
     );
-    const isClosing = useRef(false);
     const didMountOnAnimate = useRef(false);
 
     // scrollable variables
@@ -226,10 +225,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           return;
         }
         currentIndexRef.current = index;
-
-        if (isClosing.current && (index === 0 || index === -1)) {
-          isClosing.current = false;
-        }
 
         if (_providedOnChange) {
           /**
@@ -393,9 +388,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
             snapPoints.length - 1
           }`
         );
-        if (isClosing.current) {
-          return;
-        }
+
         const newSnapPoint = snapPoints[index];
         runOnUI(animateToPoint)(newSnapPoint, 0, ...args);
       },
@@ -403,19 +396,12 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     );
     const handleClose = useCallback(
       (...args) => {
-        if (isClosing.current) {
-          return;
-        }
-        isClosing.current = true;
         runOnUI(animateToPoint)(safeContainerHeight, 0, ...args);
       },
       [animateToPoint, safeContainerHeight]
     );
     const handleExpand = useCallback(
       (...args) => {
-        if (isClosing.current) {
-          return;
-        }
         const newSnapPoint = snapPoints[snapPoints.length - 1];
         runOnUI(animateToPoint)(newSnapPoint, 0, ...args);
       },
@@ -423,9 +409,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     );
     const handleCollapse = useCallback(
       (...args) => {
-        if (isClosing.current) {
-          return;
-        }
         const newSnapPoint = snapPoints[0];
         runOnUI(animateToPoint)(newSnapPoint, 0, ...args);
       },
@@ -538,7 +521,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         animateOnMount &&
         isLayoutCalculated &&
         didMountOnAnimate.current === false &&
-        isClosing.current === false &&
         snapPoints[_providedIndex] !== safeContainerHeight &&
         _providedIndex !== -1
       ) {
@@ -559,11 +541,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
      * keep animated position synced with snap points.
      */
     useEffect(() => {
-      if (
-        isLayoutCalculated &&
-        currentIndexRef.current !== -1 &&
-        isClosing.current === false
-      ) {
+      if (isLayoutCalculated && currentIndexRef.current !== -1) {
         const newSnapPoint = snapPoints[currentIndexRef.current];
         requestAnimationFrame(() => runOnUI(animateToPoint)(newSnapPoint));
       }
