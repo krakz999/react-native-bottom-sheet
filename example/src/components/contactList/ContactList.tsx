@@ -107,6 +107,7 @@ const ContactList = ({
           ListHeaderComponent: header,
         })}
         style={styles.container}
+        keyboardDismissMode="interactive"
         contentContainerStyle={contentContainerStyle}
         focusHook={useFocusEffect}
       />
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
   },
   container: {
     overflow: 'visible',
+    flex: 1,
   },
   contentContainer: {
     paddingHorizontal: 24,

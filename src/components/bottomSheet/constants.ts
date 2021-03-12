@@ -1,5 +1,5 @@
-import { Platform } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
+import { KEYBOARD_BEHAVIOR } from '../../constants';
 import { exp } from '../../utilities/easingExp';
 
 const DEFAULT_ANIMATION_EASING: Animated.EasingFunction = Easing.out(exp);
@@ -12,12 +12,7 @@ const DEFAULT_ENABLE_HANDLE_PANNING_GESTURE = true;
 const DEFAULT_ENABLE_OVER_DRAG = true;
 const DEFAULT_ENABLE_FLASH_SCROLLABLE_INDICATOR_ON_EXPAND = true;
 const DEFAULT_ANIMATE_ON_MOUNT = false;
-
-const DECELERATION_RATE = Platform.select({
-  ios: 0.998,
-  android: 0.985,
-  default: 1,
-});
+const DEFAULT_KEYBOARD_BEHAVIOR = KEYBOARD_BEHAVIOR.none;
 
 export {
   DEFAULT_ANIMATION_EASING,
@@ -29,5 +24,5 @@ export {
   DEFAULT_ENABLE_OVER_DRAG,
   DEFAULT_ENABLE_FLASH_SCROLLABLE_INDICATOR_ON_EXPAND,
   DEFAULT_ANIMATE_ON_MOUNT,
-  DECELERATION_RATE,
+  DEFAULT_KEYBOARD_BEHAVIOR,
 };
