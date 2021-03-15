@@ -171,7 +171,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
     // refs
     const currentIndexRef = useRef<number>(_providedIndex);
-    const isClosing = useRef(false);
     const didMountOnAnimate = useRef(false);
 
     const {
@@ -338,10 +337,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       if (_providedOnChange) {
         _providedOnChange(index);
       }
-
-      if (isClosing.current && (index === 0 || index === -1)) {
-        isClosing.current = false;
-      }
+   
     });
     const handleSettingScrollableRef = useCallback(
       (scrollableRef: ScrollableRef) => {
@@ -361,9 +357,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
             snapPoints.length - 1
           }`
         );
-        if (isClosing.current && !force) {
-          return;
-        }
+    
         manualSnapToPoint.setValue(snapPoints[index]);
       },
       [snapPoints, manualSnapToPoint]
@@ -372,24 +366,16 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       const currentIndexValue = currentIndexRef.current;
       if (
         currentIndexValue === -1 ||
-        isClosing.current ||
         currentPositionRef.current === safeContainerHeight
       ) {
         return;
       }
-      isClosing.current = true;
       manualSnapToPoint.setValue(safeContainerHeight);
     }, [manualSnapToPoint, safeContainerHeight]);
     const handleExpand = useCallback(() => {
-      if (isClosing.current) {
-        return;
-      }
       manualSnapToPoint.setValue(snapPoints[snapPoints.length - 1]);
     }, [snapPoints, manualSnapToPoint]);
     const handleCollapse = useCallback(() => {
-      if (isClosing.current) {
-        return;
-      }
       manualSnapToPoint.setValue(snapPoints[0]);
     }, [snapPoints, manualSnapToPoint]);
     //#endregion
@@ -497,9 +483,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       if (
         animateOnMount &&
         isLayoutCalculated &&
-        didMountOnAnimate.current === false &&
-        isClosing.current === false &&
-        _providedIndex !== -1
+        didMountOnAnimate.current === false 
       ) {
         manualSnapToPoint.setValue(snapPoints[_providedIndex]);
         didMountOnAnimate.current = true;
@@ -518,9 +502,9 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     useEffect(() => {
       if (
         isLayoutCalculated &&
-        currentIndexRef.current !== -1 &&
-        isClosing.current === false
+        currentIndexRef.current !== -1
       ) {
+        console.log(currentIndexRef.current)
         manualSnapToPoint.setValue(snapPoints[currentIndexRef.current]);
       }
     }, [isLayoutCalculated, snapPoints, manualSnapToPoint]);
